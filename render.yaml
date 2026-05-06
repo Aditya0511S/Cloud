@@ -1,0 +1,27 @@
+services:
+  # Backend Service
+  - type: web
+    name: task-manager-api
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: MONGO_URI
+        sync: false # You will set this in the Render Dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PORT
+        value: 5000
+    rootDirectory: backend
+
+  # Frontend Service (Optional if using Vercel, but here for completeness)
+  - type: static
+    name: task-manager-ui
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    rootDirectory: frontend
+    envVars:
+      - key: VITE_API_URL
+        value: https://task-manager-api.onrender.com/api
